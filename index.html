@@ -241,7 +241,9 @@ function playOne(q,v){
     $("duel").classList.add("voted");
     $(voted[q[0]]==="a"?"optA":"optB").classList.add("mine");
     $("next").textContent="다음 질문";
-    showResult(voted[q[0]], v.a, v.b);
+    if(v) showResult(voted[q[0]], v.a, v.b);
+    else fetch(SB_URL+"/rest/v1/votes?select=a,b&question_id=eq."+encodeURIComponent(q[0]),{headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}})
+      .then(r=>r.json()).then(rows=>{ if(cur===q&&rows[0]) showResult(voted[q[0]],rows[0].a,rows[0].b); }).catch(()=>{});
   }
 }
 
@@ -329,7 +331,7 @@ async function pick(side){
 async function share(){
   if(!cur) return;
   const text=`${cur[3]}\nvs\n${cur[4]}\n\n너는 뭐 골라?`;
-  const url=location.href.split("#")[0];
+  const url=location.origin+location.pathname+"?q="+cur[0];
   try{ if(navigator.share){ await navigator.share({title:"골라봐",text,url}); return; } }catch(e){ if(e&&e.name==="AbortError") return; }
   try{ await navigator.clipboard.writeText(text+"\n"+url); toast("복사했어. 단톡방에 붙여넣어줘"); }
   catch(e){ toast("복사가 안 돼. 캡처해서 보내줘"); }
@@ -353,7 +355,12 @@ document.addEventListener("keydown",e=>{
 
 const d=new Date(); $("issue").textContent=`${d.getFullYear()}. ${pad(d.getMonth()+1)}. ${pad(d.getDate())}`;
 renderHeat();
-fetch("questions.json").then(r=>r.json()).then(j=>{ DATA=j; CATS=j.cats; renderHome(); loadTop(); })
+fetch("questions.json").then(r=>r.json()).then(j=>{ DATA=j; CATS=j.cats; renderHome(); loadTop();
+  // 광고·공유 링크(?q=질문번호)로 들어오면 그 질문부터 바로 보여줌
+  const qid=new URLSearchParams(location.search).get("q");
+  const hit=qid&&DATA.q.find(x=>x[0]===qid);
+  if(hit){ playOne(hit); history.replaceState(null,"",location.pathname); }
+})
   .catch(()=>{ $("foot").textContent="질문을 못 불러왔어. 새로고침해줘."; });
 </script>
 </body>
