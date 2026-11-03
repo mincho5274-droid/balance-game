@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F3EFE6">
+<title>골라봐</title>
+<meta name="description" content="둘 중 하나만 고르는 밸런스 게임. 다른 사람들은 뭘 골랐는지 확인해봐.">
+<meta property="og:title" content="골라봐">
+<meta property="og:description" content="둘 중 하나만 골라. 다른 사람들은 뭘 골랐을까?">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F3EFE6; --paper2:#EAE4D7; --ink:#1A1813; --muted:#8C8576; --line:#D8D0C0;
+  --a:#C4462C; --b:#2B4A6F;
+  --serif:"Hahmlet","Noto Serif KR",serif;
+  --sans:"IBM Plex Sans KR",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--paper)}
+body{color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  -webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;text-align:inherit}
+.wrap{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;padding:22px 22px 28px}
+.hidden{display:none!important}
+.rule{height:1px;background:var(--ink)}
+.rule.thin{background:var(--line)}
+
+/* ---------- home ---------- */
+.mast-top{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.14em;color:var(--muted);padding-bottom:10px;text-transform:uppercase}
+.title{font-family:var(--serif);font-weight:700;font-size:64px;line-height:1;letter-spacing:-.04em;padding:22px 0 14px}
+.title i{font-style:normal;color:var(--a)}
+.lede{font-family:var(--serif);font-size:17px;color:#4a463d;padding-bottom:26px;max-width:22em}
+.sec{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--muted);letter-spacing:.06em;margin:28px 0 10px}
+.heat{display:flex;border:1px solid var(--ink);border-radius:2px}
+.heat button{flex:1;padding:11px 0;text-align:center;font-size:14px;font-weight:500;transition:background .2s,color .2s}
+.heat button+button{border-left:1px solid var(--ink)}
+.heat button.on{background:var(--ink);color:var(--paper)}
+.heat button.on+button.on{border-left-color:#55514a}
+.toc{list-style:none}
+.toc li{border-bottom:1px solid var(--line)}
+.toc button{width:100%;display:grid;grid-template-columns:36px 1fr auto 18px;align-items:baseline;gap:6px;padding:17px 0;transition:padding .2s}
+.toc button:active{padding-left:6px}
+.toc .no{font-family:var(--serif);font-size:13px;color:var(--muted)}
+.toc .nm{font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:-.02em}
+.toc .ct{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.toc .ar{color:var(--muted);text-align:right}
+.toc .feat .nm{color:var(--a)}
+.toc .new{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--paper);background:var(--a);padding:2px 5px;border-radius:2px;margin-left:8px;vertical-align:4px}
+.top{list-style:none;border-top:1px solid var(--ink)}
+.top li{border-bottom:1px solid var(--line)}
+.top button{width:100%;display:grid;grid-template-columns:28px 1fr;gap:6px;padding:13px 0;align-items:start}
+.top .rk{font-family:var(--serif);font-size:20px;font-weight:700;line-height:1.2;color:var(--ink)}
+.top li:nth-child(n+4) .rk{color:var(--muted);font-weight:500}
+.top .qq{font-family:var(--serif);font-size:15.5px;font-weight:500;line-height:1.4;word-break:keep-all}
+.top .qq em{font-style:italic;color:var(--muted);font-weight:400;margin:0 4px}
+.top .split{display:flex;height:3px;margin-top:8px;background:var(--line)}
+.top .split i{display:block;background:var(--a)} .top .split b{display:block;background:var(--b)}
+.top .meta{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:5px;font-variant-numeric:tabular-nums}
+.foot{margin-top:auto;padding-top:34px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+
+/* ---------- play ---------- */
+.bar{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;font-size:13px}
+.bar .back{color:var(--ink);font-weight:500;padding:4px 0}
+.bar .no{font-family:var(--serif);color:var(--muted);font-variant-numeric:tabular-nums}
+.kicker{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);letter-spacing:.04em;padding:16px 0 18px}
+.kicker .dot{width:3px;height:3px;border-radius:50%;background:var(--muted)}
+.kicker .lv{color:var(--a);font-weight:600}
+.duel{flex:1;display:flex;flex-direction:column;min-height:380px}
+.opt{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;padding:22px 20px;overflow:hidden;
+  background:#FBF9F4;border:1px solid var(--line);border-radius:3px;transition:transform .15s,border-color .2s}
+.opt:active{transform:scale(.985)}
+.opt .tag{position:absolute;top:14px;left:18px;font-family:var(--serif);font-size:13px;font-weight:600;color:var(--muted);z-index:2;transition:color .3s}
+.opt .txt{position:relative;z-index:2;font-family:var(--serif);font-size:25px;font-weight:600;line-height:1.38;letter-spacing:-.025em;word-break:keep-all;transition:color .3s}
+.opt .res{position:relative;z-index:2;display:flex;align-items:baseline;gap:8px;margin-top:12px;opacity:0;transform:translateY(6px);transition:opacity .4s .25s,transform .4s .25s}
+.opt .pct{font-family:var(--serif);font-size:38px;font-weight:700;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.opt .cnt{font-size:12px;opacity:.75}
+.opt .fill{position:absolute;inset:0;transform-origin:left;transform:scaleX(0);transition:transform .9s cubic-bezier(.2,.75,.15,1);z-index:1}
+.opt.A .fill{background:#EDCFC5} .opt.B .fill{background:#CFD9E6}
+.opt.A .pct{color:var(--a)} .opt.B .pct{color:var(--b)}
+.or{display:flex;align-items:center;gap:12px;padding:10px 0;font-family:var(--serif);font-size:14px;font-style:italic;color:var(--muted)}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.voted .opt{cursor:default}
+.voted .opt:active{transform:none}
+.voted .res{opacity:1;transform:none}
+.voted .opt.mine{border-color:var(--ink)}
+.voted .opt.mine .tag::after{content:" · 내 선택"}
+.verdict{min-height:46px;padding:16px 0 4px;font-family:var(--serif);font-size:16px;text-align:center;color:#4a463d}
+.actions{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:10px}
+.btn{padding:16px 0;text-align:center;font-weight:600;font-size:15px;border:1px solid var(--ink);border-radius:2px}
+.btn.solid{background:var(--ink);color:var(--paper)}
+.btn:active{opacity:.8}
+.end{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;padding-bottom:60px}
+.end h2{font-family:var(--serif);font-size:34px;line-height:1.2;letter-spacing:-.03em}
+.end p{color:#4a463d}
+.toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));transform:translate(-50%,10px);background:var(--ink);color:var(--paper);
+  padding:11px 18px;font-size:14px;border-radius:2px;opacity:0;transition:.25s;pointer-events:none;z-index:9;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (max-height:700px){ .title{font-size:52px;padding-top:14px} .opt .txt{font-size:22px} .duel{min-height:320px} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+
+<main class="wrap" id="home">
+  <div class="mast-top"><span>Balance Game</span><span id="issue"></span></div>
+  <div class="rule"></div>
+  <h1 class="title">골라봐<i>.</i></h1>
+  <p class="lede">둘 다 싫어도, 둘 다 좋아도 하나만. 다른 사람들은 뭘 골랐는지 바로 보여줄게.</p>
+  <div class="rule"></div>
+
+  <div class="sec"><span>맵기</span><span id="heatNote">전부</span></div>
+  <div class="heat" id="heat">
+    <button data-lv="1">순한</button><button data-lv="2">매운</button><button data-lv="3">극한</button>
+  </div>
+
+  <section id="topWrap" class="hidden">
+    <div class="sec"><span>지금 제일 많이 고른 TOP 10</span><span id="topNote"></span></div>
+    <ol class="top" id="top"></ol>
+  </section>
+
+  <div class="sec"><span>주제</span><span>남은 질문</span></div>
+  <ul class="toc" id="toc"></ul>
+
+  <div class="foot"><span id="foot">불러오는 중</span><span id="mineCount"></span></div>
+</main>
+
+<main class="wrap hidden" id="play">
+  <div class="bar"><button class="back" id="back">← 주제</button><span class="no" id="qno"></span></div>
+  <div class="rule"></div>
+
+  <div id="stage" style="display:flex;flex-direction:column;flex:1">
+    <div class="kicker" id="kicker"></div>
+    <div class="duel" id="duel">
+      <button class="opt A" id="optA"><span class="fill"></span><span class="tag">A</span><span class="txt"></span><span class="res"><span class="pct"></span><span class="cnt"></span></span></button>
+      <div class="or">또는</div>
+      <button class="opt B" id="optB"><span class="fill"></span><span class="tag">B</span><span class="txt"></span><span class="res"><span class="pct"></span><span class="cnt"></span></span></button>
+    </div>
+    <p class="verdict" id="verdict"></p>
+    <div class="actions">
+      <button class="btn" id="share">공유</button>
+      <button class="btn solid" id="next">넘기기</button>
+    </div>
+  </div>
+
+  <div class="end hidden" id="end">
+    <h2>이 주제는<br>다 골랐어.</h2>
+    <p>다른 주제나 맵기를 바꿔서 계속해봐.</p>
+    <div class="actions" style="grid-template-columns:1fr 1fr">
+      <button class="btn" id="reset">처음부터</button>
+      <button class="btn solid" id="home2">다른 주제</button>
+    </div>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const SB_URL = "https://lapszlwsilvbjaeqbahb.supabase.co";
+const SB_KEY = "sb_publishable_GZjfjrhmK2XP6QmrNWb8fQ_MMksSKNN";
+const LVNAME = {1:"순한맛",2:"매운맛",3:"극한맛"};
+
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+};
+const $ = id => document.getElementById(id);
+
+let DATA=null, CATS=[];
+let levels = new Set(store.get("bg_levels",[1,2,3]));
+let voted = store.get("bg_voted",{});
+let skipped = new Set(), deck=[], cur=null, curCat=null, busy=false, statsOk=true;
+
+function toast(m){ const t=$("toast"); t.textContent=m; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),1700); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function pool(cat){ return DATA.q.filter(q=>(cat==="all"||q[1]===cat)&&levels.has(q[5])); }
+const pad = n => String(n).padStart(2,"0");
+
+function renderHeat(){
+  document.querySelectorAll("#heat button").forEach(b=>b.classList.toggle("on",levels.has(+b.dataset.lv)));
+  $("heatNote").textContent = levels.size===3 ? "전부" : levels.size ? [...levels].sort().map(l=>LVNAME[l]).join(" · ") : "하나 이상 골라줘";
+}
+
+function renderHome(){
+  const toc=$("toc"); toc.innerHTML="";
+  const rows=[{id:"all",name:"전부 섞기"},...CATS];
+  rows.forEach((c,i)=>{
+    const left = pool(c.id).filter(q=>!voted[q[0]]).length;
+    const li=document.createElement("li"), b=document.createElement("button");
+    if(c.id==="love") b.className="feat";
+    b.innerHTML=`<span class="no"></span><span class="nm"></span><span class="ct"></span><span class="ar">→</span>`;
+    b.querySelector(".no").textContent = i===0 ? "—" : pad(i);
+    b.querySelector(".nm").textContent = c.name;
+    if(c.id==="hot"){ const n=document.createElement("span"); n.className="new"; n.textContent="NEW"; b.querySelector(".nm").appendChild(n); }
+    b.querySelector(".ct").textContent = left.toLocaleString();
+    b.onclick=()=>start(c.id);
+    li.appendChild(b); toc.appendChild(li);
+  });
+  $("foot").textContent = `질문 ${DATA.q.length.toLocaleString()}개`;
+  const n=Object.keys(voted).length;
+  $("mineCount").textContent = n ? `지금까지 ${n.toLocaleString()}개 고름` : "";
+}
+
+async function loadTop(){
+  try{
+    const ctl=new AbortController(), t=setTimeout(()=>ctl.abort(),6000);
+    const r=await fetch(SB_URL+"/rest/v1/votes?select=question_id,a,b,total&total=gte.1&order=total.desc&limit=30",
+      {signal:ctl.signal,headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}});
+    clearTimeout(t); if(!r.ok) throw 0;
+    const byId=new Map(DATA.q.map(q=>[q[0],q]));
+    const rows=(await r.json()).filter(v=>byId.has(v.question_id)).slice(0,10);
+    if(!rows.length) return;
+    const ol=$("top"); ol.innerHTML="";
+    rows.forEach((v,i)=>{
+      const q=byId.get(v.question_id), pa=Math.round(v.a/v.total*100);
+      const li=document.createElement("li"), b=document.createElement("button");
+      b.innerHTML=`<span class="rk"></span><span><span class="qq"></span><span class="split"><i></i><b></b></span><span class="meta"><span></span><span></span></span></span>`;
+      b.querySelector(".rk").textContent=i+1;
+      const qq=b.querySelector(".qq"); qq.append(q[3]); const em=document.createElement("em"); em.textContent="vs"; qq.append(em, q[4]);
+      b.querySelector(".split i").style.width=pa+"%"; b.querySelector(".split b").style.width=(100-pa)+"%";
+      const m=b.querySelectorAll(".meta span");
+      m[0].textContent=`A ${pa}% · B ${100-pa}%`; m[1].textContent=`${v.total.toLocaleString()}명`;
+      b.onclick=()=>playOne(q,v);
+      li.appendChild(b); ol.appendChild(li);
+    });
+    $("topNote").textContent="실시간";
+    $("topWrap").classList.remove("hidden");
+  }catch(e){ /* 집계 서버에 못 닿으면 TOP 10은 숨김 */ }
+}
+
+function playOne(q,v){
+  curCat=q[1]; skipped.clear();
+  deck=shuffle(pool(q[1]).filter(x=>!voted[x[0]]&&x!==q));
+  $("home").classList.add("hidden"); $("play").classList.remove("hidden");
+  showCard(q);
+  if(voted[q[0]]){ // 이미 고른 질문은 다시 집계하지 않고 결과만 보여줌
+    $("duel").classList.add("voted");
+    $(voted[q[0]]==="a"?"optA":"optB").classList.add("mine");
+    $("next").textContent="다음 질문";
+    showResult(voted[q[0]], v.a, v.b);
+  }
+}
+
+function showResult(side,a,b){
+  const total=a+b, pa=total?Math.round(a/total*100):0, pb=total?100-pa:0;
+  [["optA",pa,a],["optB",pb,b]].forEach(([id,p,n])=>{
+    const o=$(id); o.querySelector(".fill").style.transform=`scaleX(${p/100})`;
+    o.querySelector(".pct").textContent=p+"%"; o.querySelector(".cnt").textContent=n.toLocaleString()+"명";
+  });
+  $("verdict").textContent = verdict(side==="a"?pa:pb,total);
+}
+
+function start(cat){
+  if(!levels.size){ toast("맵기를 하나 이상 골라줘"); return; }
+  curCat=cat; skipped.clear();
+  deck = shuffle(pool(cat).filter(q=>!voted[q[0]]));
+  $("home").classList.add("hidden"); $("play").classList.remove("hidden");
+  next();
+}
+
+function next(){
+  deck = deck.filter(q=>!voted[q[0]]);
+  cur = deck.find(q=>!skipped.has(q[0]));
+  if(!cur && deck.length){ skipped.clear(); cur=deck[0]; }
+  if(!cur){ $("stage").classList.add("hidden"); $("end").classList.remove("hidden"); $("qno").textContent=""; return; }
+  deck = deck.filter(q=>q!==cur); deck.push(cur);
+  showCard(cur);
+}
+
+function showCard(q){
+  cur=q;
+  $("stage").classList.remove("hidden"); $("end").classList.add("hidden");
+  const cat = CATS.find(c=>c.id===cur[1]);
+  $("qno").textContent = `No. ${cur[0].split("-")[1]}`;
+  const k=$("kicker"); k.innerHTML="";
+  [cat.name, cur[2]].forEach((t,i)=>{ if(i){ const d=document.createElement("span"); d.className="dot"; k.appendChild(d);} const s=document.createElement("span"); s.textContent=t; k.appendChild(s); });
+  const d=document.createElement("span"); d.className="dot"; k.appendChild(d);
+  const lv=document.createElement("span"); lv.className="lv"; lv.textContent=LVNAME[cur[5]]; k.appendChild(lv);
+  $("duel").classList.remove("voted");
+  for(const [id,t] of [["optA",cur[3]],["optB",cur[4]]]){
+    const o=$(id); o.classList.remove("mine","lit");
+    o.querySelector(".txt").textContent=t;
+    o.querySelector(".fill").style.transform="scaleX(0)";
+    o.querySelector(".pct").textContent=""; o.querySelector(".cnt").textContent="";
+  }
+  $("verdict").textContent=""; $("next").textContent="넘기기"; busy=false;
+  window.scrollTo(0,0);
+}
+
+function verdict(mine,total){
+  if(total<5) return `아직 ${total}명만 골랐어. 거의 첫 타자야.`;
+  if(mine>=75) return `대부분이 너랑 같아. ${mine}%.`;
+  if(mine>=55) return `조금 더 많은 쪽이야. ${mine}%.`;
+  if(mine>45) return `거의 반반으로 갈렸어.`;
+  if(mine>25) return `조금 소수파야. ${mine}%.`;
+  return `소수파. ${mine}%만 이걸 골랐어.`;
+}
+
+async function pick(side){
+  if(busy||!cur||$("duel").classList.contains("voted")) return;
+  busy=true; const q=cur;
+  $("duel").classList.add("voted");
+  $(side==="a"?"optA":"optB").classList.add("mine");
+  $("next").textContent="다음 질문";
+  voted[q[0]]=side; store.set("bg_voted",voted);
+  $("verdict").textContent="집계 불러오는 중…";
+  let a,b;
+  try{
+    const ctl=new AbortController(), t=setTimeout(()=>ctl.abort(),7000);
+    const r=await fetch(SB_URL+"/rest/v1/rpc/cast_vote",{method:"POST",signal:ctl.signal,
+      headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY,"Content-Type":"application/json"},
+      body:JSON.stringify({qid:q[0],side})});
+    clearTimeout(t); if(!r.ok) throw 0;
+    const rows=await r.json(); a=rows[0].a; b=rows[0].b;
+  }catch(e){
+    if(cur===q) $("verdict").textContent = statsOk && !/claude/.test(location.hostname)
+      ? "집계를 못 불러왔어. 네 선택은 저장해뒀어." : "미리보기라 집계는 안 나와. 앱에서는 보여.";
+    busy=false; return;
+  }
+  if(cur!==q) return;
+  showResult(side,a,b);
+  busy=false;
+}
+
+async function share(){
+  if(!cur) return;
+  const text=`${cur[3]}\nvs\n${cur[4]}\n\n너는 뭐 골라?`;
+  const url=location.href.split("#")[0];
+  try{ if(navigator.share){ await navigator.share({title:"골라봐",text,url}); return; } }catch(e){ if(e&&e.name==="AbortError") return; }
+  try{ await navigator.clipboard.writeText(text+"\n"+url); toast("복사했어. 단톡방에 붙여넣어줘"); }
+  catch(e){ toast("복사가 안 돼. 캡처해서 보내줘"); }
+}
+
+function goHome(){ $("play").classList.add("hidden"); $("home").classList.remove("hidden"); renderHome(); loadTop(); window.scrollTo(0,0); }
+$("optA").onclick=()=>pick("a"); $("optB").onclick=()=>pick("b");
+$("next").onclick=()=>{ if(cur&&!voted[cur[0]]) skipped.add(cur[0]); next(); };
+$("share").onclick=share; $("back").onclick=goHome; $("home2").onclick=goHome;
+$("reset").onclick=()=>{ pool(curCat).forEach(q=>delete voted[q[0]]); store.set("bg_voted",voted); start(curCat); };
+document.querySelectorAll("#heat button").forEach(b=>b.onclick=()=>{
+  const l=+b.dataset.lv; levels.has(l)?levels.delete(l):levels.add(l);
+  store.set("bg_levels",[...levels]); renderHeat(); renderHome();
+});
+document.addEventListener("keydown",e=>{
+  if($("play").classList.contains("hidden")) return;
+  if(e.key==="1"||e.key==="ArrowUp") pick("a");
+  if(e.key==="2"||e.key==="ArrowDown") pick("b");
+  if(e.key==="Enter"||e.key==="ArrowRight"){ e.preventDefault(); $("next").click(); }
+});
+
+const d=new Date(); $("issue").textContent=`${d.getFullYear()}. ${pad(d.getMonth()+1)}. ${pad(d.getDate())}`;
+renderHeat();
+fetch("questions.json").then(r=>r.json()).then(j=>{ DATA=j; CATS=j.cats; renderHome(); loadTop(); })
+  .catch(()=>{ $("foot").textContent="질문을 못 불러왔어. 새로고침해줘."; });
+</script>
+</body>
+</html>
